@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">demo</string>
+    <string name="favourites">Favourites</string>
+    <string name="home">Home</string>
+    <string name="popular">Popular</string>
+    <string name="setting">Setting</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="no_internet_connection">Internet not available</string>
+    <string name="no_record">No record found</string>
+    <string name="of">Of</string>
+
+
+    <string name="connect_clicked">Invitation accepted for this profile</string>
+
+
+    <string name="age"> (AGE: %d)</string>
+    <string name="comma">, </string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="today">today</string>
+    <string name="yesterday">yesterday</string>
+    <string name="some_day_ago">%d days ago</string>
+    <string name="empty_card">"No profile available. "</string>
+</resources>

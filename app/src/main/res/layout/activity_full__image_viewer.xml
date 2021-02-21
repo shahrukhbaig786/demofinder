@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white">
+
+        <ImageView
+
+            android:id="@+id/image_viewer_back_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/icon_back" />
+
+        <TextView
+            android:id="@+id/image_viewer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/light_black_txt"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/image_viewpager_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl"
+        android:layout_above="@+id/rl_bottom" />
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/image_viewer_previous_img"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:padding="10dp"
+            android:src="@drawable/pink_arrow_back" />
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:id="@+id/image_viewer_next_img"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40dp"
+            android:padding="10dp"
+            android:src="@drawable/pink_next" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

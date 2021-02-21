@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FC6600</color>
+    <color name="colorPrimaryDark">#FC6600</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#dfb92f</color>
+    <color name="red">#c4130b</color>
+    <color name="edit_background_drak">#efefef</color>
+    <color name="light_black_txt">#909090</color>
+    <color name="light_act">#afadac</color>
+    <color name="orange">#FC6600</color>
+    <color name="dark_orange">#f2844c</color>
+    <color name="colorPrimary_light">#faece9</color>
+    <color name="green">#006400</color>
+</resources>
