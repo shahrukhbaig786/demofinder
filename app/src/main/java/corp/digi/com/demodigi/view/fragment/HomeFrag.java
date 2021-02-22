@@ -1,38 +1,35 @@
 package corp.digi.com.demodigi.view.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import corp.digi.com.demodigi.R;
-import corp.digi.com.demodigi.adapter.ImageAdapter;
 import corp.digi.com.demodigi.adapter.MySadiAdapter;
 import corp.digi.com.demodigi.application.DigiApplication;
 import corp.digi.com.demodigi.response.DisplayUserData;
-import corp.digi.com.demodigi.response.ServerResponse;
 import corp.digi.com.demodigi.response.UserResponse;
 import corp.digi.com.demodigi.util.RxService;
 import corp.digi.com.demodigi.util.StringHelper;
 import corp.digi.com.demodigi.util.Util;
-import corp.digi.com.demodigi.view.activity.HomeActivity;
+import corp.digi.com.demodigi.view.dao.ProfileRoomDatabase;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +46,7 @@ public class HomeFrag extends Fragment {
     RecyclerView recyclerView;
     private MySadiAdapter sadiAdapter;
     private ArrayList<DisplayUserData> userListResponse;
+    private static ProfileRoomDatabase database;
 
     @Nullable
     @Override
@@ -64,6 +62,7 @@ public class HomeFrag extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        database = ProfileRoomDatabase.getDatabase(getActivity());
         getServerData();
     }
 
@@ -87,6 +86,12 @@ public class HomeFrag extends Fragment {
             public void onDecline(View viewToAnimate, int position) {
                 sadiAdapter.removeUser(viewToAnimate, position);
             }
+
+            @Override
+            public void onItemClick(int position) {
+                sadiAdapter.onItemClick(position);
+            }
+
             @Override
             public void emptyView() {
                 Toast.makeText(getActivity(), getString(R.string.empty_card),
@@ -101,6 +106,7 @@ public class HomeFrag extends Fragment {
         try {
             if (Util.hasInternet(getActivity())) {
                 userListResponse = new ArrayList<>();
+                new deleteAllProfileData().execute();
                 Util.showProDialog(getActivity());
                 RxService apiService = DigiApplication.getClient().create(RxService.class);
                 /* You can pass param also but now nothing ,u can even use GET method ,but fpr privacy im going post*/
@@ -112,7 +118,9 @@ public class HomeFrag extends Fragment {
                             Log.e(TAG, response.body().toString());
                             ArrayList<UserResponse.User> list = new ArrayList<UserResponse.User>();
                             for (UserResponse.User user : response.body().getUsers()) {
-                                userListResponse.add(new DisplayUserData(user, new StringHelper(getActivity())));
+                                DisplayUserData displayUserData = new DisplayUserData(user, new StringHelper(getActivity()));
+                                database.displayUserDataDao().insert(displayUserData);
+                                userListResponse.add(displayUserData);
                             }
                             Util.dismissProDialog();
                             setAdapter();
@@ -128,10 +136,38 @@ public class HomeFrag extends Fragment {
 
 
             } else {
-                Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.loading_from_db, Toast.LENGTH_SHORT).show();
+                new FetcProfileData().execute();
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private static class deleteAllProfileData extends AsyncTask<Void, String, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            database.displayUserDataDao().deleteAll();
+            return TAG;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+    }
+    @SuppressLint("StaticFieldLeak")
+    private  class FetcProfileData extends AsyncTask<Void, String, ArrayList<DisplayUserData>> {
+        @Override
+        protected ArrayList<DisplayUserData> doInBackground(Void... voids) {
+            userListResponse = new ArrayList<>();
+            userListResponse.addAll(database.displayUserDataDao().getAllProfile());
+            setAdapter();
+            return new ArrayList<DisplayUserData>();
+        }
+
+
     }
 }

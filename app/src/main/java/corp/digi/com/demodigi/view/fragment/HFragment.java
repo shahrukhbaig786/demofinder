@@ -1,15 +1,17 @@
 package corp.digi.com.demodigi.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +47,13 @@ public class HFragment extends Fragment {
         try {
             mFragmentTitleList.clear();
             mFragmentList.clear();
-            adapter = new TabViewAdapter(this.getChildFragmentManager());
-            int count = adapter.getCount();
-            adapter.addFragment(new HomeFrag(), getString(R.string.home));
-            adapter.addFragment(new FavFrag(), getString(R.string.favourites));
-            adapter.addFragment(new PopularFrag(), getString(R.string.popular));
-            adapter.addFragment(new SettingFrag(), getString(R.string.setting));
-            viewPager.setAdapter(adapter);
+//            adapter = new TabViewAdapter(this.getChildFragmentManager());
+//            int count = adapter.getCount();
+//            adapter.addFragment(new HomeFrag(), getString(R.string.home));
+//            adapter.addFragment(new FavFrag(), getString(R.string.favourites));
+//            adapter.addFragment(new PopularFrag(), getString(R.string.popular));
+//            adapter.addFragment(new SettingFrag(), getString(R.string.setting));
+//            viewPager.setAdapter(adapter);
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -74,7 +76,7 @@ public class HFragment extends Fragment {
                 public void onPageScrollStateChanged(int state) {
                 }
             });
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +96,7 @@ public class HFragment extends Fragment {
                 }
                 case 1: {
 
-                    return new FavFrag();
+//                    return new FavFrag();
                 }
                 case 2: {
 

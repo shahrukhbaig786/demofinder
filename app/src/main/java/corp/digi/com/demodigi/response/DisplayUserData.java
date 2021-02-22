@@ -1,18 +1,44 @@
 package corp.digi.com.demodigi.response;
 
 
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import corp.digi.com.demodigi.util.StringHelper;
 
 /**
  * Created by srb on 21/02/2021.
  */
+@Entity(tableName = "profile_table")
 public class DisplayUserData {
 
+    public DisplayUserData() {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @NonNull
+    @ColumnInfo(name = "fullname")
     private String fullNameAge;
+    @ColumnInfo(name = "location")
     private String location;
+    @ColumnInfo(name = "email")
     private String email;
+    @ColumnInfo(name = "registrationperiod")
     private String registrationPeriod;
+    @ColumnInfo(name = "picture")
     private String picture;
 
     public DisplayUserData(UserResponse.User user, StringHelper stringHelper) {

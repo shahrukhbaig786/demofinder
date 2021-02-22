@@ -2,8 +2,6 @@ package corp.digi.com.demodigi.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
@@ -69,6 +70,9 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
                     .into(holder.imvLogo);
             holder.fabConnect.setOnClickListener(v -> listener.onConnect());
             holder.fabDecline.setOnClickListener(view -> listener.onDecline(holder.fabDecline, position));
+            holder.imvLogo.setOnClickListener(view -> {
+                listener.onItemClick(position);
+            });
         } catch (Exception r) {
             Log.e("ERROR", r.toString());
         }
@@ -77,6 +81,15 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
     @Override
     public int getItemCount() {
         return responseList.size();
+    }
+
+    public void onItemClick(int position) {
+        Intent intent = new Intent(mContext, FullImageViewerActivity.class);
+        ArrayList<String> image_arr = new ArrayList<>();
+        image_arr.add(responseList.get(position).getPicture());
+        intent.putStringArrayListExtra("imageArray", image_arr);
+        intent.putExtra("pos", position);
+        mContext.startActivity(intent);
     }
 
 
@@ -95,14 +108,18 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
             tvNameAge = (TextView) itemView.findViewById(R.id.tv_name_age);
             tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
             tvEmail = (TextView) itemView.findViewById(R.id.tv_email);
+
         }
     }
 
     public interface ItemListener {
         void onConnect();
+
         void emptyView();
 
         void onDecline(View viewToAnimate, int position);
+
+        void onItemClick(int position);
     }
 
     public void setListener(ItemListener listener) {
@@ -115,8 +132,8 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
         viewToAnimate.startAnimation(animation);
         responseList.remove(position);
         notifyDataSetChanged();
-        if(responseList.isEmpty()){
-            if(listener!=null){
+        if (responseList.isEmpty()) {
+            if (listener != null) {
                 listener.emptyView();
             }
         }

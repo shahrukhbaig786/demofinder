@@ -1,6 +1,5 @@
 package corp.digi.com.demodigi.util;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,26 +7,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import com.google.android.material.snackbar.Snackbar;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import corp.digi.com.demodigi.R;
 
@@ -93,20 +85,5 @@ public class Util {
         }
         return bitmap;
     }
-
-    public static void showErrorSnackBar(CoordinatorLayout coordinatorLayout, String msg, Context context) {
-        try {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG);
-            View sbView = snackbar.getView();
-            sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.WHITE);
-            snackbar.setDuration(5000);
-            snackbar.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

@@ -1,7 +1,8 @@
 package corp.digi.com.demodigi.application;
 
 import android.provider.SyncStateContract;
-import android.support.multidex.MultiDexApplication;
+
+import androidx.multidex.MultiDexApplication;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,8 @@ public class DigiApplication extends MultiDexApplication {
             }
         });
     }
+
+
 
 
     public static Retrofit getClient() {

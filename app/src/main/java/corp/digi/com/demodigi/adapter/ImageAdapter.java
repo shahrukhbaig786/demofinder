@@ -2,11 +2,12 @@ package corp.digi.com.demodigi.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -103,13 +104,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageAdapter
                 case R.id.imv_heart: {
                     if (response.get(getLayoutPosition()).isFavrite()) {
                         imv_heart.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_border_grey_24dp));
-                        ((HomeActivity) mContext).updateList(getLayoutPosition(),false);
+//                        ((HomeActivity) mContext).updateList(getLayoutPosition(),false);
                         if (type.equals("favorite"))
                         response.remove(getLayoutPosition());
                         notifyDataSetChanged();
                     } else {
                         imv_heart.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_red_24dp));
-                        ((HomeActivity) mContext).updateList(getLayoutPosition(),true);
+//                        ((HomeActivity) mContext).updateList(getLayoutPosition(),true);
                         notifyDataSetChanged();
                     }
                 }
