@@ -56,6 +56,7 @@ public class FavFrag extends Fragment {
             view = inflater.inflate(R.layout.home_fragment_, container, false);
             ButterKnife.bind(this, view);
         }
+        Toast.makeText(getActivity(), R.string.loading_from_db, Toast.LENGTH_SHORT).show();
         database = ProfileRoomDatabase.getDatabase(getActivity());
         return view;
     }
@@ -81,7 +82,6 @@ public class FavFrag extends Fragment {
     class FetcProfileData extends AsyncTask<Void, String, List<DisplayUserData>> {
         @Override
         protected List<DisplayUserData> doInBackground(Void... voids) {
-            Toast.makeText(getActivity(), R.string.loading_from_db, Toast.LENGTH_SHORT).show();
             return database.displayUserDataDao().getAllProfileFavt();
         }
 
