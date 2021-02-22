@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +37,7 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
     private String type;
     private DisplayImageOptions options;
     private ItemListener listener;
+    private boolean hideBottomOperation =false;
 
     public MySadiAdapter(Context context, ArrayList<DisplayUserData> responses, String type) {
         this.responseList = responses;
@@ -59,6 +61,7 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
     @Override
     public void onBindViewHolder(MySadiAdapterHolders holder, int position) {
         try {
+            holder.lnrOperation.setVisibility(hideBottomOperation?View.GONE :View.VISIBLE);
             holder.tvCreatedDate.setText(responseList.get(position).getRegistrationPeriod());
             holder.tvNameAge.setText(responseList.get(position).getFullNameAge());
             holder.tvLocation.setText(responseList.get(position).getLocation());
@@ -68,7 +71,7 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
                     .placeholder(android.R.drawable.ic_menu_camera)
                     .error(android.R.drawable.ic_menu_camera)
                     .into(holder.imvLogo);
-            holder.fabConnect.setOnClickListener(v -> listener.onConnect());
+            holder.fabConnect.setOnClickListener(v -> listener.onConnect(holder.fabDecline, position));
             holder.fabDecline.setOnClickListener(view -> listener.onDecline(holder.fabDecline, position));
             holder.imvLogo.setOnClickListener(view -> {
                 listener.onItemClick(position);
@@ -92,9 +95,14 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
         mContext.startActivity(intent);
     }
 
+    public void hideBottomOperation(boolean visibleBottomLinerLayout) {
+        this.hideBottomOperation = visibleBottomLinerLayout;
+    }
+
 
     public class MySadiAdapterHolders extends RecyclerView.ViewHolder {
 
+        private LinearLayout lnrOperation;
         private ImageView imvLogo, imv_heart;
         private TextView tvCreatedDate, tvNameAge, tvLocation, tvEmail;
         private FloatingActionButton fabConnect, fabDecline;
@@ -108,6 +116,7 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
             tvNameAge = (TextView) itemView.findViewById(R.id.tv_name_age);
             tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
             tvEmail = (TextView) itemView.findViewById(R.id.tv_email);
+            lnrOperation = (LinearLayout) itemView.findViewById(R.id.lnr_operation);
 
         }
     }
@@ -118,6 +127,7 @@ public class MySadiAdapter extends RecyclerView.Adapter<MySadiAdapter.MySadiAdap
         void emptyView();
 
         void onDecline(View viewToAnimate, int position);
+        void onConnect(View viewToAnimate, int position);
 
         void onItemClick(int position);
     }

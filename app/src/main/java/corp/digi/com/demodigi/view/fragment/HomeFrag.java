@@ -1,13 +1,18 @@
 package corp.digi.com.demodigi.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Trace;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +35,8 @@ import corp.digi.com.demodigi.response.UserResponse;
 import corp.digi.com.demodigi.util.RxService;
 import corp.digi.com.demodigi.util.StringHelper;
 import corp.digi.com.demodigi.util.Util;
+import corp.digi.com.demodigi.view.activity.HomeActivity;
+import corp.digi.com.demodigi.view.activity.SplashActivity;
 import corp.digi.com.demodigi.view.dao.ProfileRoomDatabase;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,8 +91,28 @@ public class HomeFrag extends Fragment {
             }
 
             @Override
+            public void onConnect(View viewToAnimate, int position) {
+                if (position < userListResponse.size()) {
+                    Toast.makeText(getActivity(), getString(R.string.connect_clicked),
+                            Toast.LENGTH_LONG).show();
+                    new updateItemAsynTask(userListResponse.get(position), false).execute();
+                 }
+            }
+
+            @Override
             public void onDecline(View viewToAnimate, int position) {
-                sadiAdapter.removeUser(viewToAnimate, position);
+//              sadiAdapter.removeUser(viewToAnimate, position);
+                if (position < userListResponse.size()) {
+                    Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext()
+                            , android.R.anim.slide_out_right);
+                    viewToAnimate.startAnimation(animation);
+                    new updateItemAsynTask(userListResponse.get(position), true).execute();
+                    userListResponse.remove(position);
+                    sadiAdapter.notifyDataSetChanged();
+                    if (userListResponse.isEmpty()) {
+                        emptyView();
+                    }
+                }
             }
 
             @Override
@@ -119,11 +147,11 @@ public class HomeFrag extends Fragment {
                             ArrayList<UserResponse.User> list = new ArrayList<UserResponse.User>();
                             for (UserResponse.User user : response.body().getUsers()) {
                                 DisplayUserData displayUserData = new DisplayUserData(user, new StringHelper(getActivity()));
-                                database.displayUserDataDao().insert(displayUserData);
                                 userListResponse.add(displayUserData);
                             }
                             Util.dismissProDialog();
                             setAdapter();
+                            new StoreProfileData().execute();
                         }
                     }
 
@@ -137,8 +165,7 @@ public class HomeFrag extends Fragment {
 
             } else {
                 Toast.makeText(getActivity(), R.string.loading_from_db, Toast.LENGTH_SHORT).show();
-                new FetcProfileData().execute();
-
+                new Handler().postDelayed(() -> new FetcProfileData().execute(), 1000);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,28 +173,79 @@ public class HomeFrag extends Fragment {
     }
 
 
-    private static class deleteAllProfileData extends AsyncTask<Void, String, String> {
+    private static class deleteAllProfileData extends AsyncTask<Void, Void, Boolean> {
         @Override
-        protected String doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             database.displayUserDataDao().deleteAll();
-            return TAG;
+            return true;
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
         }
     }
+
     @SuppressLint("StaticFieldLeak")
-    private  class FetcProfileData extends AsyncTask<Void, String, ArrayList<DisplayUserData>> {
+    private class FetcProfileData extends AsyncTask<Void, String, List<DisplayUserData>> {
         @Override
-        protected ArrayList<DisplayUserData> doInBackground(Void... voids) {
+        protected List<DisplayUserData> doInBackground(Void... voids) {
+            return database.displayUserDataDao().getAllProfile();
+        }
+
+        @Override
+        protected void onPostExecute(List<DisplayUserData> responseList) {
+            super.onPostExecute(responseList);
             userListResponse = new ArrayList<>();
-            userListResponse.addAll(database.displayUserDataDao().getAllProfile());
+            userListResponse.addAll(responseList);
             setAdapter();
-            return new ArrayList<DisplayUserData>();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class StoreProfileData extends AsyncTask<Void, String, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            for (int i = 0; i < userListResponse.size(); i++) {
+                database.displayUserDataDao().insert(userListResponse.get(i));
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean responseList) {
+            super.onPostExecute(responseList);
+
+        }
+    }
+
+    private class updateItemAsynTask extends AsyncTask<Boolean, String, Boolean> {
+        DisplayUserData data;
+        boolean decline;
+
+        public updateItemAsynTask(DisplayUserData data, boolean decline) {
+            this.data = data;
+            this.decline = decline;
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... booleans) {
+            if (decline) {
+                data.isRemoved = true;
+                database.displayUserDataDao().insert(data);
+            } else {
+                data.isConected = true;
+                database.displayUserDataDao().insert(data);
+            }
+            return true;
         }
 
 
+        @Override
+        protected void onPostExecute(Boolean status) {
+            if (status) {
+
+            }
+        }
     }
 }

@@ -20,6 +20,15 @@ public interface ProfileDao {
     @Query("DELETE FROM profile_table")
     void deleteAll();
 
+
+
     @Query("SELECT * FROM profile_table")
     List<DisplayUserData> getAllProfile();
+
+    @Query("SELECT * FROM profile_table WHERE isconnected = 1")
+    List<DisplayUserData> getAllProfileFavt();
+
+
+    @Query("SELECT * FROM profile_table WHERE isremoved = 1")
+    List<DisplayUserData> getAllDeclineData();
 }

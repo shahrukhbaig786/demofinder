@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 import corp.digi.com.demodigi.response.DisplayUserData;
 
-@Database(entities = {DisplayUserData.class}, version = 1, exportSchema = false)
+@Database(entities = {DisplayUserData.class}, version = 2, exportSchema = false)
 public abstract class ProfileRoomDatabase extends RoomDatabase {
 
     public abstract ProfileDao displayUserDataDao();

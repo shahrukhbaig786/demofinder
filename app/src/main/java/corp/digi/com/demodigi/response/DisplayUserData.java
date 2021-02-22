@@ -15,6 +15,28 @@ import corp.digi.com.demodigi.util.StringHelper;
 @Entity(tableName = "profile_table")
 public class DisplayUserData {
 
+    public boolean isConected() {
+        return isConected;
+    }
+
+    public void setConected(boolean conected) {
+        isConected = conected;
+    }
+    @ColumnInfo(name = "isconnected")
+    public boolean isConected;
+
+    public boolean isRemoved() {
+        return isRemoved;
+    }
+
+    public void setRemoved(boolean removed) {
+        isRemoved = removed;
+    }
+
+    @NonNull
+    @ColumnInfo(name = "isremoved")
+    public boolean isRemoved;
+
     public DisplayUserData() {
 
     }
